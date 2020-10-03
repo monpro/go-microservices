@@ -1,4 +1,4 @@
-module github.com/go-tools/blog-service
+module github.com/go-microservices/blog-service
 
 go 1.15
 
@@ -11,7 +11,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/ugorji/go v1.1.9 // indirect
+	github.com/ugorji/go v1.1.10 // indirect
 	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect
