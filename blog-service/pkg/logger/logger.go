@@ -2,10 +2,12 @@ package logger
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"runtime"
+	"time"
 )
 
 type Level int8
@@ -108,3 +110,60 @@ func (logger *Logger) withCallersFrames() *Logger {
 	return newLogger
 }
 
+func (logger *Logger) JSONFormat(msg string) map[string]interface{}  {
+	data := make(Fields, len(logger.fields) + 4)
+	data["level"] = logger.level.String()
+	data["time"] = time.Now().Local().UnixNano()
+	data["message"] = msg
+	data["callers"] = logger.callers
+	if len(logger.fields) > 0 {}
+	for key, value := range logger.fields {
+		if _, status := data[key]; !status {
+			data[key] = value
+		}
+	}
+	return data
+}
+
+func (logger *Logger) Output(msg string) {
+	body, _ := json.Marshal(logger.JSONFormat(msg))
+	content := string(body)
+	switch logger.level {
+	case LevelDebug:
+		logger.newLogger.Print(content)
+	case LevelInfo:
+		logger.newLogger.Printf(content)
+	case LevelWarn:
+		logger.newLogger.Printf(content)
+	case LevelError:
+		logger.newLogger.Print(content)
+	case LevelFatal:
+		logger.newLogger.Fatalf(content)
+	case LevelPanic:
+		logger.newLogger.Panic(content)
+	}
+}
+
+func (logger *Logger) Debug(v ...interface{})  {
+	logger.WithLevel(LevelDebug).Output(fmt.Sprint(v...))
+}
+
+func (logger *Logger) DebugFormat(format string, v ...interface{})  {
+	logger.WithLevel(LevelDebug).Output(fmt.Sprintf(format, v...))
+}
+
+func (logger *Logger) Info(v ...interface{})  {
+	logger.WithLevel(LevelInfo).Output(fmt.Sprint(v...))
+}
+
+func (logger *Logger) InfoFormat(format string, v ...interface{})  {
+	logger.WithLevel(LevelInfo).Output(fmt.Sprintf(format, v...))
+}
+
+func (logger *Logger) Fatal(v ...interface{})  {
+	logger.WithLevel(LevelFatal).Output(fmt.Sprint(v...))
+}
+
+func (logger *Logger) FatalFormat(format string, v ...interface{})  {
+	logger.WithLevel(LevelFatal).Output(fmt.Sprintf(format, v...))
+}
