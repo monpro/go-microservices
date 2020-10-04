@@ -3,8 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-microservices/blog-service/global"
+	"github.com/go-microservices/blog-service/internal/model"
+	"github.com/go-microservices/blog-service/internal/routers"
 	"github.com/go-microservices/blog-service/pkg/settting"
-	"github.com/go-microservices/blog-service/routers"
 	"log"
 	"net/http"
 	"time"
@@ -14,6 +15,10 @@ func init() {
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init setupSetting err: %v", err)
+	}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init setupDBEngine: %v", err)
 	}
 }
 
@@ -55,5 +60,13 @@ func setupSetting() error {
 	global.ServerSetting.ReadTimeOut *= time.Second
 	global.ServerSetting.WriteTimeOut *= time.Second
 	return nil
+}
 
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDbEngine(global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
+	return nil
 }
