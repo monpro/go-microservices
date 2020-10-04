@@ -27,7 +27,10 @@ func init() {
 		log.Fatalf("inint setupLogger: %v", err)
 	}
 }
-
+//@title blog microservice
+//@version 1.0
+//@description Go microservices
+//@termsOfService https://github.com/go-microservices
 func main() {
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
