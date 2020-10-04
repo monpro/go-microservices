@@ -25,9 +25,9 @@ type DatabaseSettingS struct {
 	DBName       string
 	TablePrefix  string
 	Charset      string
-	ParseTime    string
-	MaxIdleConns string
-	MaxOpenConns string
+	ParseTime    bool
+	MaxIdleConns int
+	MaxOpenConns int
 }
 
 func (s *Setting) ReadSection(key string, value interface{}) error {

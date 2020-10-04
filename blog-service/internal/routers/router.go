@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	v1 "github.com/go-microservices/blog-service/routers/api/v1"
+	v1 "github.com/go-microservices/blog-service/internal/routers/api/v1"
 )
 func NewRouter() *gin.Engine {
 	router := gin.New()

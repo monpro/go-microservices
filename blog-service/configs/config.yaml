@@ -16,7 +16,7 @@ Database:
   #replace these params in prod
   Username: root
   Password: 123456
-  Host: 127.0.0.1:3306
+  Host: localhost
   DBName: blog_service
   TablePrefix: blog_
   Charset: utf8
