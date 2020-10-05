@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"runtime"
@@ -110,6 +111,17 @@ func (logger *Logger) withCallersFrames() *Logger {
 	return newLogger
 }
 
+func (logger *Logger) WithTrace() *Logger {
+	context, status := logger.ctx.(*gin.Context)
+	if status {
+		return logger.WithFields(Fields{
+			"trace_id": context.MustGet("X-Trace-ID"),
+			"span_id": context.MustGet("X-Span-ID"),
+		})
+	}
+	return logger
+}
+
 func (logger *Logger) JSONFormat(msg string) map[string]interface{}  {
 	data := make(Fields, len(logger.fields) + 4)
 	data["level"] = logger.level.String()
@@ -125,7 +137,7 @@ func (logger *Logger) JSONFormat(msg string) map[string]interface{}  {
 	return data
 }
 
-func (logger *Logger) Output(msg string) {
+func (logger *Logger) Output(level Level, msg string) {
 	body, _ := json.Marshal(logger.JSONFormat(msg))
 	content := string(body)
 	switch logger.level {
@@ -144,26 +156,50 @@ func (logger *Logger) Output(msg string) {
 	}
 }
 
-func (logger *Logger) Debug(v ...interface{})  {
-	logger.WithLevel(LevelDebug).Output(fmt.Sprint(v...))
+func (logger *Logger) Debug(ctx context.Context, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelDebug, fmt.Sprint(v...))
 }
 
-func (logger *Logger) DebugFormat(format string, v ...interface{})  {
-	logger.WithLevel(LevelDebug).Output(fmt.Sprintf(format, v...))
+func (logger *Logger) DebugFormat(ctx context.Context, format string, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelDebug, fmt.Sprintf(format, v...))
 }
 
-func (logger *Logger) Info(v ...interface{})  {
-	logger.WithLevel(LevelInfo).Output(fmt.Sprint(v...))
+func (logger *Logger) Info(ctx context.Context, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelInfo, fmt.Sprint(v...))
 }
 
-func (logger *Logger) InfoFormat(format string, v ...interface{})  {
-	logger.WithLevel(LevelInfo).Output(fmt.Sprintf(format, v...))
+func (logger *Logger) InfoFormat(ctx context.Context, format string, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelInfo, fmt.Sprintf(format, v...))
 }
 
-func (logger *Logger) Fatal(v ...interface{})  {
-	logger.WithLevel(LevelFatal).Output(fmt.Sprint(v...))
+func (logger *Logger) Warn(ctx context.Context, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelInfo, fmt.Sprint(v...))
 }
 
-func (logger *Logger) FatalFormat(format string, v ...interface{})  {
-	logger.WithLevel(LevelFatal).Output(fmt.Sprintf(format, v...))
+func (logger *Logger) WarnFormat(ctx context.Context, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelInfo, fmt.Sprint(v...))
+}
+
+func (logger *Logger) Error(ctx context.Context, v ...interface{}) {
+	logger.WithContext(ctx).WithTrace().Output(LevelError, fmt.Sprint(v...))
+}
+
+func (logger *Logger) ErrorFormat(ctx context.Context, format string, v ...interface{}) {
+	logger.WithContext(ctx).WithTrace().Output(LevelError, fmt.Sprintf(format, v...))
+}
+
+func (logger *Logger) Fatal(ctx context.Context, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelFatal, fmt.Sprint(v...))
+}
+
+func (logger *Logger) FatalFormat(ctx context.Context, format string, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelFatal, fmt.Sprintf(format, v...))
+}
+
+func (logger *Logger) Panic(ctx context.Context, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelPanic, fmt.Sprint(v...))
+}
+
+func (logger *Logger) PanicFormat(ctx context.Context, format string, v ...interface{})  {
+	logger.WithContext(ctx).WithTrace().Output(LevelPanic, fmt.Sprintf(format, v...))
 }
