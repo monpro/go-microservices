@@ -1,0 +1,17 @@
+2020/10/04 14:24:15 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601781855390281000}
+2020/10/04 14:55:23 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601783723097785000}
+2020/10/04 14:55:58 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601783758944790000}
+2020/10/04 14:56:33 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601783793955661000}
+2020/10/04 18:56:17 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798177960604000}
+2020/10/04 18:59:53 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798393877088000}
+2020/10/04 19:00:16 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798416919541000}
+2020/10/04 19:01:46 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798506456910000}
+2020/10/04 19:02:06 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798526488724000}
+2020/10/04 19:02:56 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798576138066000}
+2020/10/04 19:03:27 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798607271586000}
+2020/10/04 19:04:32 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798672578937000}
+2020/10/04 19:07:26 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601798846782567000}
+2020/10/04 19:16:35 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601799395981197000}
+2020/10/04 19:26:00 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601799960255103000}
+2020/10/05 11:53:42 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 25 main.init.0"],"level":"info","message":"test: go/blog-service","time":1601859222694078000}
+2020/10/05 18:13:25 {"callers":["/Users/monpro/Desktop/git_warehouse/go-microservices/blog-service/main.go: 26 main.init.0"],"level":"debug","message":"app bindAndValid errors State must be one of [0 1]","span_id":"482370fb020bcef2","time":1601882005696404000,"trace_id":"482370fb020bcef2"}

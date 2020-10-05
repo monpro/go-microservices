@@ -13,6 +13,7 @@ func NewRouter() *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.Use(middleware.Translation())
+	router.Use(middleware.Tracing())
 	url := ginSwagger.URL("http://localhost:8000/swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	article := v1.NewArticle()

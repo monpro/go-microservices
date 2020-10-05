@@ -1,6 +1,12 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/go-microservices/blog-service/global"
+	"github.com/go-microservices/blog-service/internal/service"
+	"github.com/go-microservices/blog-service/pkg/app"
+	"github.com/go-microservices/blog-service/pkg/errcode"
+)
 
 type Tag struct {}
 
@@ -18,7 +24,18 @@ func NewTag() Tag {
 //@Failure 400 {object} errcode.Error "Failure"
 //@Failure 500 {object} errcode.Error "Internal Server Error"
 //@Router /api/v1/tags [get]
-func (t Tag) List(c *gin.Context)   {}
+func (t Tag) List(context *gin.Context)   {
+	param := service.TagListRequest{}
+	response := app.NewResponse(context)
+	valid, errs := app.BindAndValid(context, &param)
+	if !valid {
+		global.Logger.ErrorFormat(context, "app bindAndValid errors %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+}
 //@Summary create a tag
 //@Produce json
 //@Param name query string false "tagName" maxlength(100)
