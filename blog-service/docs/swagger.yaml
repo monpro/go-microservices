@@ -19,6 +19,41 @@ definitions:
       msg:
         type: string
     type: object
+  model.Article:
+    properties:
+      content:
+        type: string
+      cover_image_url:
+        type: string
+      created_by:
+        type: string
+      created_on:
+        type: integer
+      deleted_on:
+        type: integer
+      desc:
+        type: string
+      id:
+        type: integer
+      is_del:
+        type: integer
+      modified_by:
+        type: string
+      state:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.ArticleSwagger:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.Article'
+        type: array
+      pager:
+        $ref: '#/definitions/app.Pager'
+        type: object
+    type: object
   model.Tag:
     properties:
       created_by:
@@ -56,6 +91,145 @@ info:
   title: blog microservice
   version: "1.0"
 paths:
+  /api/v1/articles:
+    get:
+      parameters:
+      - description: articleName
+        in: query
+        name: name
+        type: string
+      - description: tagId
+        in: query
+        name: tag_id
+        type: integer
+      - description: state
+        in: query
+        name: state
+        type: integer
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page_size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/model.ArticleSwagger'
+        "400":
+          description: Failure
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: get a list of articles
+  /api/v1/articles/{id}:
+    delete:
+      parameters:
+      - description: id for the article
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/string'
+        "400":
+          description: Failure
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: get a list of articles
+    get:
+      parameters:
+      - description: id for the article
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/model.Article'
+        "400":
+          description: Failure
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: get an article
+    put:
+      parameters:
+      - description: tag_id
+        in: body
+        name: tag_id
+        required: true
+        schema:
+          type: string
+      - description: title
+        in: body
+        name: title
+        required: true
+        schema:
+          type: string
+      - description: description for the article
+        in: body
+        name: desc
+        schema:
+          type: string
+      - description: cover_image_url
+        in: body
+        name: cover_image_url
+        required: true
+        schema:
+          type: string
+      - description: content
+        in: body
+        name: content
+        required: true
+        schema:
+          type: string
+      - description: modifier
+        in: body
+        name: modified_by
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/model.ArticleSwagger'
+        "400":
+          description: Failure
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: get a list of articles
   /api/v1/tags:
     get:
       parameters:
@@ -124,7 +298,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/model.TagSwapper'
+            $ref: '#/definitions/model.Tag'
         "400":
           description: Failure
           schema:
@@ -148,7 +322,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/model.TagSwapper'
+            $ref: '#/definitions/string'
         "400":
           description: Failure
           schema:
@@ -195,7 +369,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/model.TagSwapper'
+            $ref: '#/definitions/model.Tag'
         "400":
           description: Failure
           schema:
