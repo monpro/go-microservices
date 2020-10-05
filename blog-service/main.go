@@ -7,6 +7,7 @@ import (
 	"github.com/go-microservices/blog-service/internal/routers"
 	"github.com/go-microservices/blog-service/pkg/logger"
 	"github.com/go-microservices/blog-service/pkg/settting"
+	"github.com/go-microservices/blog-service/pkg/tracer"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
@@ -25,6 +26,10 @@ func init() {
 	err = setupLogger()
 	if err != nil {
 		log.Fatalf("inint setupLogger: %v", err)
+	}
+	err = setupTracer()
+	if err != nil {
+		log.Fatalf("inint setupTracer: %v", err)
 	}
 }
 //@title blog microservice
@@ -46,7 +51,6 @@ func main() {
 	//fmt.Printf("%+v\n", global.AppSetting)
 	//fmt.Printf("%+v\n", global.DatabaseSetting)
 
-	global.Logger.InfoFormat("%s: go/%s","test", "blog-service")
 	server.ListenAndServe()
 }
 
@@ -91,5 +95,14 @@ func setupLogger() error {
 		MaxAge: 10,
 		LocalTime: true,
 	}, "", log.LstdFlags).WithCaller(2)
+	return nil
+}
+
+func setupTracer() error {
+	jaegerTracer, _, err := tracer.NewJaegerTracer("blog-service", "127.0.0.1:6831")
+	if err != nil {
+		return err
+	}
+	global.Tracer = jaegerTracer
 	return nil
 }
