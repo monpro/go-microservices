@@ -42,7 +42,7 @@ func (d *Dao) DeleteTag(id uint32) error {
 	return tag.Delete(d.engine)
 }
 
-func (d *Dao) GetTagList(name string, state uint8, page, pageSize int) ([]*model.Tag, error) {
+func (d *Dao) GetTagList(name string, state uint8, page int, pageSize int) ([]*model.Tag, error) {
 	tag := model.Tag{Name: name, State: state}
 	pageOffSet := app.GetPageOffset(page, pageSize)
 	return tag.List(d.engine, pageOffSet, pageSize)
