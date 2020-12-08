@@ -23,6 +23,7 @@ func NewRouter() *gin.Engine {
 	article := v1.NewArticle()
 	tag := v1.NewTag()
 	upload := api.NewUpload()
+	router.POST("/auth", api.GetAuth)
 	router.POST("/upload/file", upload.UploadFile)
 	router.StaticFS("/static", http.Dir(global.AppSetting.UploadSavePath))
 	apiV1 := router.Group("/api/v1")
