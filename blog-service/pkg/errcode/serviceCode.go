@@ -6,4 +6,6 @@ var (
 	ErrorUpdateTagFail  = NewError(20010003, "update tag service fail")
 	ErrorDeleteTagFail  = NewError(20010004, "delete tag service fail")
 	ErrorCountTagFail   = NewError(20010005, "count tag service fail")
+
+	ErrorUploadFail = NewError(30010001, "upload file service fail")
 )
