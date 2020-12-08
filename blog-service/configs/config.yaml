@@ -23,3 +23,8 @@ Database:
   ParseTime: True
   MaxIdleConns: 10
   MaxOpenConns: 10
+
+JWT:
+  secret: eddycjy # in prod replace this with environment variable
+  Issuer: blog-service
+  Expire: 7200

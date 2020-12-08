@@ -32,6 +32,7 @@ func init() {
 		log.Fatalf("inint setupTracer: %v", err)
 	}
 }
+
 //@title blog microservice
 //@version 1.0
 //@description Go microservices
@@ -71,9 +72,14 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
+	err = newSetting.ReadSection("JWT", &global.JWTSetting)
+	if err != nil {
+		return err
+	}
 
 	global.ServerSetting.ReadTimeOut *= time.Second
 	global.ServerSetting.WriteTimeOut *= time.Second
+	global.JWTSetting.Expire *= time.Second
 	return nil
 }
 
@@ -91,8 +97,8 @@ func setupLogger() error {
 		Filename: global.AppSetting.LogSavePath + "/" +
 			global.AppSetting.LogFileName +
 			global.AppSetting.LogFileExt,
-		MaxSize: 600,
-		MaxAge: 10,
+		MaxSize:   600,
+		MaxAge:    10,
 		LocalTime: true,
 	}, "", log.LstdFlags).WithCaller(2)
 	return nil
