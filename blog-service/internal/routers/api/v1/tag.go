@@ -5,10 +5,11 @@ import (
 	"github.com/go-microservices/blog-service/global"
 	"github.com/go-microservices/blog-service/internal/service"
 	"github.com/go-microservices/blog-service/pkg/app"
+	"github.com/go-microservices/blog-service/pkg/convert"
 	"github.com/go-microservices/blog-service/pkg/errcode"
 )
 
-type Tag struct {}
+type Tag struct{}
 
 func NewTag() Tag {
 	return Tag{}
@@ -24,7 +25,7 @@ func NewTag() Tag {
 //@Failure 400 {object} errcode.Error "Failure"
 //@Failure 500 {object} errcode.Error "Internal Server Error"
 //@Router /api/v1/tags [get]
-func (t Tag) List(context *gin.Context)   {
+func (t Tag) List(context *gin.Context) {
 	param := service.TagListRequest{}
 	response := app.NewResponse(context)
 	valid, errs := app.BindAndValid(context, &param)
@@ -33,9 +34,24 @@ func (t Tag) List(context *gin.Context)   {
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
-	response.ToResponse(gin.H{})
+	svc := service.New(context.Request.Context())
+	pager := app.Pager{Page: app.GetPage(context), PageSize: app.GetPageSize(context)}
+	totalRows, err := svc.CountTag(&service.CountTagRequest{Name: param.Name, State: param.State})
+	if err != nil {
+		global.Logger.ErrorFormat(context, "svc.CountTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorCountTagFail)
+		return
+	}
+	tags, err := svc.GetTagList(&param, &pager)
+	if err != nil {
+		global.Logger.ErrorFormat(context, "svc.GetTagList err: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetTagListFail)
+		return
+	}
+	response.ToResponseList(tags, totalRows)
 	return
 }
+
 //@Summary create a tag
 //@Produce json
 //@Param name query string false "tagName" maxlength(100)
@@ -45,7 +61,27 @@ func (t Tag) List(context *gin.Context)   {
 //@Failure 400 {object} errcode.Error "Failure"
 //@Failure 500 {object} errcode.Error "Internal Server Error"
 //@Router /api/v1/tags [post]
-func (t Tag) Create(c *gin.Context) {}
+func (t Tag) Create(c *gin.Context) {
+	param := service.CreateTagRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.ErrorFormat(c, "app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+	}
+
+	svc := service.New(c.Request.Context())
+	err := svc.CreateTag(&param)
+	if err != nil {
+		global.Logger.ErrorFormat(c, "svc.CreateTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+
+}
+
 //@Summary update  atag
 //@Produce json
 //@Param id path int true "id for tag"
@@ -56,7 +92,26 @@ func (t Tag) Create(c *gin.Context) {}
 //@Failure 400 {object} errcode.Error "Failure"
 //@Failure 500 {object} errcode.Error "Internal Server Error"
 //@Router /api/v1/tags/{id} [put]
-func (t Tag) Update(c *gin.Context) {}
+func (t Tag) Update(c *gin.Context) {
+	param := service.UpdateTagRequest{Id: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.ErrorFormat(c, "app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	err := svc.UpdateTag(&param)
+	if err != nil {
+		global.Logger.ErrorFormat(c, "svc.UpdateTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorUpdateTagFail)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+}
+
 //@Summary delete a tag
 //@Produce json
 //@Param id path int true "id for tag"
@@ -64,4 +119,23 @@ func (t Tag) Update(c *gin.Context) {}
 //@Failure 400 {object} errcode.Error "Failure"
 //@Failure 500 {object} errcode.Error "Internal Server Error"
 //@Router /api/v1/tags/{id} [delete]
-func (t Tag) Delete(c *gin.Context) {}
+func (t Tag) Delete(c *gin.Context) {
+	param := service.DeleteTagRequest{Id: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.ErrorFormat(c, "app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	err := svc.DeleteTag(&param)
+	if err != nil {
+		global.Logger.ErrorFormat(c, "svc.DeleteTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorDeleteTagFail)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
+
+}
