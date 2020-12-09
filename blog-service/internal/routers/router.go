@@ -7,17 +7,38 @@ import (
 	"github.com/go-microservices/blog-service/internal/middleware"
 	"github.com/go-microservices/blog-service/internal/routers/api"
 	v1 "github.com/go-microservices/blog-service/internal/routers/api/v1"
+	"github.com/go-microservices/blog-service/pkg/limiter"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
+	"time"
+)
+
+var limiters = limiter.NewMethodLimiter().AddBuckets(
+	limiter.BucketRule{
+		Key:          "/auth",
+		FillInterval: time.Second,
+		Capacity:     10,
+		Quantum:      10,
+	},
 )
 
 func NewRouter() *gin.Engine {
 	router := gin.New()
+	if global.ServerSetting.RunMode == "debug" {
+		router.Use(gin.Logger())
+		router.Use(gin.Recovery())
+	} else {
+		router.Use(middleware.AccessLog())
+		router.Use(middleware.Recovery())
+	}
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.Use(middleware.Translation())
 	router.Use(middleware.Tracing())
+
+	router.Use(middleware.RateLimiter(limiters))
+	router.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTimeout))
 	url := ginSwagger.URL("http://localhost:8000/swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	article := v1.NewArticle()
